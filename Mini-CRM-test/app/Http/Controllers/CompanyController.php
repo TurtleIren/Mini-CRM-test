@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Company;
 use function Carbon\int;
+use Illuminate\Support\Facades\Storage;
+
+use App\Models\Company;
+use App\Http\Requests\StoreCompanyRequest;
 
 class CompanyController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+
     }
 
     /**
@@ -33,24 +36,21 @@ class CompanyController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCompanyRequest $request)
     {
 
-        $request->validate([
-            'name' => 'required',
-            'email' => 'nullable|email',
-            'logo' => 'nullable|image|dimensions:min_width=100,min_height=100',
-            'website' => 'nullable|url',
-        ]);
+        try {
+            $data = $request->validated();
 
-        $data = $request->all();
+            if ($request->hasFile('logo')) {
+                $data['logo'] = $request->file('logo')->store('logos', 'public');
+            }
 
-        if ($request->hasFile('logo')) {
-            $data['logo'] = $request->file('logo')->store('logos', 'public');
+            Company::create($data);
+            return redirect()->route('companies.index')->with('success', 'Company created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('companies.index')->with('error', 'Failed to create company: ' . $e->getMessage());
         }
-
-        Company::create($data);
-        return redirect()->route('companies.index')->with('success', 'Company created successfully.');
     }
 
     /**
@@ -89,23 +89,24 @@ class CompanyController extends Controller
         //
     }
 
-    public function update(Request $request, Company $company)
+    public function update(StoreCompanyRequest $request, Company $company)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'nullable|email',
-            'logo' => 'nullable|image|dimensions:min_width=100,min_height=100',
-            'website' => 'nullable|url',
-        ]);
+        try {
 
-        $data = $request->all();
+            $data = $request->validated();
 
-        if ($request->hasFile('logo')) {
-            $data['logo'] = $request->file('logo')->store('logos', 'public');
+            if ($request->hasFile('logo')) {
+                if ($company->logo) {
+                    Storage::disk('public')->delete($company->logo);
+                }
+                $data['logo'] = $request->file('logo')->store('logos', 'public');
+            }
+
+            $company->update($data);
+            return redirect()->route('companies.index')->with('success', 'Company updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('companies.index')->with('error', 'Failed to update company: ' . $e->getMessage());
         }
-
-        $company->update($data);
-        return redirect()->route('companies.index')->with('success', 'Company updated successfully.');
     }
 
     /**
@@ -124,7 +125,15 @@ class CompanyController extends Controller
 
     public function destroy(Company $company)
     {
-        $company->delete();
-        return redirect()->route('companies.index')->with('success', 'Company deleted successfully.');
+        try {
+            if ($company->logo) {
+                Storage::disk('public')->delete($company->logo);
+            }
+
+            $company->delete();
+            return redirect()->route('companies.index')->with('success', 'Company deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('companies.index')->with('error', 'Failed to delete company: ' . $e->getMessage());
+        }
     }
 }

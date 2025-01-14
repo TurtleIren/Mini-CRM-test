@@ -18,5 +18,11 @@ class Company extends Model
     {
         return $this->hasMany(Employee::class);
     }
+
+    public function getLogoUrlAttribute()
+    {
+        return $this->logo ? asset('storage/' . $this->logo) : null;
+    }
+
 }
 
