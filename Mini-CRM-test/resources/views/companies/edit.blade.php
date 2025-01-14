@@ -21,6 +21,11 @@
                 </div>
                 <div class="form-group">
                     <label for="logo">Logo</label>
+                    @if ($company->logo)
+                        <img src="{{ asset('storage/' . $company->logo) }}" alt="Logo" style="max-height: 100px;">
+                    @else
+                        <p>No logo available.</p>
+                    @endif
                     <input type="file" name="logo" class="form-control-file">
                 </div>
                 <div class="form-group">
@@ -28,6 +33,7 @@
                     <input type="url" name="website" class="form-control" value="{{ old('website', $company->website) }}">
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>
+                <a href="{{ route('companies.index') }}" class="btn btn-secondary">Back</a>
             </form>
         </div>
     </div>

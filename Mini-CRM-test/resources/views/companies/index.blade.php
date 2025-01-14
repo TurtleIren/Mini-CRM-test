@@ -25,6 +25,11 @@
                         <td>{{ $company->id }}</td>
                         <td>{{ $company->name }}</td>
                         <td>{{ $company->email }}</td>
+                        <td>
+                            @if($company->logo)
+                                <img src="{{ $company->logoUrl }}" alt="Company Logo" width="50">
+                            @endif
+                        </td>
                         <td>{{ $company->website }}</td>
                         <td>
                             <a href="{{ route('companies.show', $company) }}" class="btn btn-info">View</a>

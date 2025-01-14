@@ -16,6 +16,12 @@
             @else
                 <p>No logo available.</p>
             @endif
+
+            <div class="form-group">
+                <p>&nbsp;</p>
+                <p><a href="{{ route('companies.index') }}" class="btn btn-secondary">Back</a></p>
+            </div>
         </div>
+
     </div>
 @endsection

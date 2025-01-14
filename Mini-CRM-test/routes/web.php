@@ -14,7 +14,6 @@ Route::middleware('auth')->group(function () {
         return view('layouts.app');
     })->name('dashboard');
 
-//    Route::get('/', [CompanyController::class, 'index'])->name('home');
     Route::resource('companies', CompanyController::class);
     Route::resource('employees', EmployeeController::class);
 });
