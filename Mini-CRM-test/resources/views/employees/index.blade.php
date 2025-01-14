@@ -9,7 +9,7 @@
             <a href="{{ route('employees.create') }}" class="btn btn-primary float-right">Add Employee</a>
         </div>
         <div class="card-body">
-            <table class="table table-bordered">
+            <table id="employeesTable" class="table table-bordered table-striped">
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -41,7 +41,18 @@
                 @endforeach
                 </tbody>
             </table>
-            {{ $employees->links() }}
+            {{-- $employees->links() --}}
         </div>
     </div>
 @endsection
+
+@section('js')
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#employeesTable').DataTable();
+        });
+    </script>
+@stop

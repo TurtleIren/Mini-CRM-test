@@ -9,12 +9,13 @@
             <a href="{{ route('companies.create') }}" class="btn btn-primary float-right">Add Company</a>
         </div>
         <div class="card-body">
-            <table class="table table-bordered">
+            <table id="companiesTable" class="table table-bordered table-striped">
                 <thead>
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
                     <th>Email</th>
+                    <th>Logo</th>
                     <th>Website</th>
                     <th>Actions</th>
                 </tr>
@@ -44,7 +45,36 @@
                 @endforeach
                 </tbody>
             </table>
-            {{ $companies->links() }}
+            {{-- $companies->links() --}}
         </div>
     </div>
 @endsection
+
+@section('js')
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#companiesTable').DataTable();
+        });
+
+        $('#companiesTable').DataTable({
+            "pagingType": "full_numbers", // Відображення пагінації з номерами
+            "lengthMenu": [5, 10, 25, 50], // Кількість записів на сторінку
+            "language": {
+                "paginate": {
+                    "first": "First",
+                    "last": "Last",
+                    "next": "Next",
+                    "previous": "Previous"
+                },
+                "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+                "lengthMenu": "Show _MENU_ entries"
+            }
+        });
+
+    </script>
+
+
+@stop
