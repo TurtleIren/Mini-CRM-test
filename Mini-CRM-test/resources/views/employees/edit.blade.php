@@ -38,6 +38,7 @@
                     <input type="text" name="phone" class="form-control" value="{{ old('phone', $employee->phone) }}">
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>
+                <a href="{{ route('employees.index') }}" class="btn btn-secondary">Back</a>
             </form>
         </div>
     </div>

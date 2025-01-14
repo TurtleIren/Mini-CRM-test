@@ -11,6 +11,8 @@
             <p><strong>Company:</strong> {{ $employee->company->name ?? '-' }}</p>
             <p><strong>Email:</strong> {{ $employee->email }}</p>
             <p><strong>Phone:</strong> {{ $employee->phone }}</p>
+            <p>&nbsp;</p>
+            <p><a href="{{ route('employees.index') }}" class="btn btn-secondary">Back</a></p>
         </div>
     </div>
 @endsection

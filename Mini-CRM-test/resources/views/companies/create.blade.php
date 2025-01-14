@@ -27,6 +27,7 @@
                     <input type="url" name="website" class="form-control" value="{{ old('website') }}">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="{{ route('companies.index') }}" class="btn btn-secondary">Back</a>
             </form>
         </div>
     </div>
