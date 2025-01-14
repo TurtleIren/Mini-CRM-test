@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Company;
+use App\Http\Requests\StoreEmployeeRequest;
+
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+
     }
 
     /**
@@ -19,7 +21,7 @@ class EmployeeController extends Controller
     public function index()
     {
         //
-        $employees = Employee::with('company')->paginate(10);
+        $employees = Employee::with('company')->paginate(env('ROWS_PER_PAGE',10));
         return view('employees.index', compact('employees'));
     }
 
@@ -29,36 +31,29 @@ class EmployeeController extends Controller
     public function create()
     {
         //
-        $companies = Company::all();
+        $companies = Company::select('id', 'name')->get();
         return view('employees.create', compact('companies'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreEmployeeRequest $request)
     {
         //
-        $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'company_id' => 'required|exists:companies,id',
-            'email' => 'nullable|email',
-            'phone' => 'nullable|string',
-        ]);
+        try {
+            $data = $request->validated();
+            Employee::create($data);
 
-        Employee::create($request->all());
-        return redirect()->route('employees.index')->with('success', 'Employee created successfully.');
-
+            return redirect()->route('employees.index')->with('success', 'Employee created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('employees.index')->with('error', 'Failed to create employee: ' . $e->getMessage());
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function showById(string $id)
-    {
-        //
-    }
 
     public function show(Employee $employee)
     {
@@ -68,50 +63,40 @@ class EmployeeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function editById(string $id)
-    {
-        //
-    }
 
     public function edit(Employee $employee)
     {
-        $companies = Company::all();
+        $companies = Company::select('id', 'name')->get();
         return view('employees.edit', compact('employee', 'companies'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function updateById(Request $request, string $id)
-    {
-        //
-    }
 
-    public function update(Request $request, Employee $employee)
+    public function update(StoreEmployeeRequest $request, Employee $employee)
     {
-        $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'company_id' => 'required|exists:companies,id',
-            'email' => 'nullable|email',
-            'phone' => 'nullable|string',
-        ]);
+        try {
+            $data = $request->validated();
+            $employee->update($data);
 
-        $employee->update($request->all());
-        return redirect()->route('employees.index')->with('success', 'Employee updated successfully.');
+            return redirect()->route('employees.index')->with('success', 'Employee updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('employees.index')->with('error', 'Failed to update employee: ' . $e->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroyById(string $id)
-    {
-        //
-    }
 
     public function destroy(Employee $employee)
     {
-        $employee->delete();
-        return redirect()->route('employees.index')->with('success', 'Employee deleted successfully.');
+        try {
+            $employee->delete();
+            return redirect()->route('employees.index')->with('success', 'Employee deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('employees.index')->with('error', 'Failed to delete employee: ' . $e->getMessage());
+        }
     }
 }

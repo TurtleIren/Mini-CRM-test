@@ -21,7 +21,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::paginate(10); // Пагінація
+        $companies = Company::paginate(env('ROWS_PER_PAGE',10));
         return view('companies.index', compact('companies'));
     }
 
