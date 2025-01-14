@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use function Carbon\int;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
 
 use App\Models\Company;
 use App\Http\Requests\StoreCompanyRequest;
+use App\Mail\CompanyRegistered;
 
 class CompanyController extends Controller
 {
@@ -47,7 +48,9 @@ class CompanyController extends Controller
                 $data['logo'] = $request->file('logo')->store('logos', 'public');
             }
 
-            Company::create($data);
+            $company = Company::create($data);
+            Mail::to($company->email)->send(new CompanyRegistered($company));
+
             return redirect()->route('companies.index')->with('success', 'Company created successfully.');
         } catch (\Exception $e) {
             return redirect()->route('companies.index')->with('error', 'Failed to create company: ' . $e->getMessage());
