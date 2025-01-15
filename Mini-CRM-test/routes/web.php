@@ -10,7 +10,7 @@ Route::get('/login', function () {
 })->name('login');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
+    Route::get('/', function () {
         return view('layouts.app');
     })->name('dashboard');
 
@@ -18,6 +18,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('employees', EmployeeController::class);
 });
 
-Auth::routes(['register' => false]);
+Auth::routes([
+    'register' => false,
+    'reset' => false,
+    'confirm' => false,
+]);
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/up', function () {
+    abort(404);
+})->name('up');
