@@ -49,7 +49,7 @@ class CompanyController extends Controller
             }
 
             $company = Company::create($data);
-            Mail::to($company->email)->send(new CompanyRegistered($company));
+            Mail::to(env('ADMIN_MAIL_ADDRESS', 'admin@admin.com'))->send(new CompanyRegistered($company));
 
             return redirect()->route('companies.index')->with('success', 'Company created successfully.');
         } catch (\Exception $e) {
