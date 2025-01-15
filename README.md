@@ -1,11 +1,13 @@
 # Mini-CRM-test
 
-##.env:
+## .env:
 
 * APP_NAME="Mini CRM test"
-* ADMIN_MAIL_ADDRESS=****
+* ADMIN_MAIL_ADDRESS=<**AdminEmail**>
 
-##Laravel Framework test task
+**AdminEmail** - your administrator's email to receive letters about the registration of a new company
+
+## Laravel Framework test task
 
 Need to create admin panel to manage companies. Basically, project to manage companies and their employees. Mini-CRM.
 
