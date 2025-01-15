@@ -1,6 +1,7 @@
 # Mini-CRM-test
-Mini-CRM test
+
 ##.env:
+
 * APP_NAME="Mini CRM test"
 * ADMIN_MAIL_ADDRESS=****
 
