@@ -60,11 +60,6 @@ class CompanyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function showById(string $id)
-    {
-        //
-        return view('companies.show', compact('company'));
-    }
 
     public function show(Company $company)
     {
@@ -74,23 +69,10 @@ class CompanyController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function editById(string $id)
-    {
-        //
-        return view('companies.edit', compact('company'));
-    }
 
     public function edit(Company $company)
     {
         return view('companies.edit', compact('company'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function updateById(Request $request, string $id)
-    {
-        //
     }
 
     public function update(StoreCompanyRequest $request, Company $company)
@@ -111,20 +93,6 @@ class CompanyController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('companies.index')->with('error', 'Failed to update company: ' . $e->getMessage());
         }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroyById(string $id)
-    {
-        //
-  //      try {
-            $intId = filter_var($id, FILTER_VALIDATE_INT);
-            $company = Company::where('id', $intId)->first();
-            $company->delete();
-            return redirect()->route('companies.index')->with('success', 'Company deleted successfully.');
-   //     }
     }
 
     public function destroy(Company $company)
